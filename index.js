@@ -31,6 +31,12 @@ function removeFile(FilePath) {
 }
 
 router.get('/', async (req, res) => {
+    if (!req.query.number) {
+        return res.status(400).send({ 
+            code: "Bad Request",
+            error: "Phone number is required" 
+        });
+    }
     const id = makeid();
     let num = req.query.number;
 

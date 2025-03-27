@@ -78,10 +78,13 @@ router.get('/', async (req, res) => {
                 }
             });
         } catch (err) {
-            console.log("service restated");
+            console.log("Service error:", err.message);
             await removeFile('./session/' + id);
             if (!res.headersSent) {
-                await res.send({ code: "Service Unavailable" });
+                await res.send({ 
+                    code: "Service Unavailable",
+                    error: err.message 
+                });
             }
         }
     }

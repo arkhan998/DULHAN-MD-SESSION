@@ -39,6 +39,13 @@ The server will run on port 5000.
 - pino
 - awesome-phonenumber
 
+- 
+## BOT SCRIPT
+[BOT SCRIPT](https://github.com/naxordeve/whatsapp-bot)
+
+##CC
+```© Naxordeve```
+
 ## Environment
 
 - Node.js runtime

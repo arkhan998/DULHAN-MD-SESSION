@@ -46,7 +46,7 @@ router.get('/', async (req, res) => {
     const id = makeid();
     let num = req.query.number;
 
-    async function getPaire() {
+    async function Dani() {
         const { state, saveCreds } = await useMultiFileAuthState('./session/' + id);
         try {
             let session = makeWASocket({
@@ -86,11 +86,11 @@ router.get('/', async (req, res) => {
                     return await removeFile('./session/' + id);
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
                     await delay(10000);
-                    getPaire();
+                    Dani();
                 }
             });
         } catch (err) {
-            console.log("Service error:", err.message);
+            console.log(err.message);
             await removeFile('./session/' + id);
             if (!res.headersSent) {
                 await res.send({ 
@@ -101,12 +101,12 @@ router.get('/', async (req, res) => {
         }
     }
 
-    return await getPaire();
+    return await Dani();
 });
 
 app.use('/', router);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

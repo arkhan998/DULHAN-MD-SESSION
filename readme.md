@@ -43,7 +43,7 @@ The server will run on port 5000.
 ## BOT SCRIPT
 [BOT SCRIPT](https://github.com/naxordeve/whatsapp-bot)
 
-##CC
+## CC
 ```© Naxordeve```
 
 ## Environment

@@ -1,5 +1,5 @@
 
-# WhatsApp Pairing Code Generator
+# WhatsApp Pair
 
 A web application that generates WhatsApp pairing codes for phone number authentication.
 

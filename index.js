@@ -1,29 +1,27 @@
-const PastebinAPI = require('pastebin-js'),
-pastebin = new PastebinAPI('ypkqXUGgzysc_yLPTBaEZ_G3G-nvjEsh')
-const { makeid } = require('./id');
-const express = require('express');
-const fs = require('fs');
-let router = express.Router()
-const pino = require("pino");
-const path = require('path');
-const {
-    default: makeWASocket,
+
+import PastebinAPI from 'pastebin-js';
+import { makeid } from './id.js';
+import express from 'express';
+import fs from 'fs';
+import pino from 'pino';
+import path from 'path';
+import { 
+    default as makeWASocket,
     useMultiFileAuthState,
     delay,
     Browsers,
     fetchLatestBaileysVersion,
-    makeCacheableSignalKeyStore
-} = require("@whiskeysockets/baileys");
+    makeCacheableSignalKeyStore 
+} from "@whiskeysockets/baileys";
+import { readFile } from "node:fs/promises";
+
+const pastebin = new PastebinAPI('ypkqXUGgzysc_yLPTBaEZ_G3G-nvjEsh');
+const router = express.Router();
+
 function removeFile(FilePath) {
     if (!fs.existsSync(FilePath)) return false;
     fs.rmSync(FilePath, { recursive: true, force: true });
-};
-
-
-
-const {
-	readFile
-} = require("node:fs/promises")
+}
 
 router.get('/', async (req, res) => {
     const id = makeid();
@@ -41,7 +39,7 @@ router.get('/', async (req, res) => {
                 logger: pino({level: "fatal"}).child({level: "fatal"}),
                 browser: Browsers.macOS("Safari"),
              });
-                       if (!session.authState.creds.registered) {
+            if (!session.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
                 const code = await session.requestPairingCode(num);
@@ -49,23 +47,22 @@ router.get('/', async (req, res) => {
                     await res.send({ code });
                 }
             }
-                  session.ev.on('creds.update', saveCreds);
+            session.ev.on('creds.update', saveCreds);
 
             session.ev.on("connection.update", async (s) => {
                 const { connection, lastDisconnect } = s;
 
                 if (connection == "open") {
-			 
-               		await delay(10000);
-	                let link = await pastebin.createPasteFromFile(__dirname+`/session/${id}/creds.json`, "pastebin-js test", null, 1, "N");
-                        let data = link.replace("https://pastebin.com/", "");
-                        let code = btoa(data);
-                        var words = code.split("");
-                        var ress = words[Math.floor(words.length / 2)];
-                        let c = code.split(ress).join(ress + "_X_ASTRAL_");
-                        await session.sendMessage(session.user.id, {text:`${c}`})
+                    await delay(10000);
+                    let link = await pastebin.createPasteFromFile(__dirname+`/session/${id}/creds.json`, "pastebin-js test", null, 1, "N");
+                    let data = link.replace("https://pastebin.com/", "");
+                    let code = btoa(data);
+                    var words = code.split("");
+                    var ress = words[Math.floor(words.length / 2)];
+                    let c = code.split(ress).join(ress + "_X_ASTRAL_");
+                    await session.sendMessage(session.user.id, {text:`${c}`})
     
-                     await delay(100);
+                    await delay(100);
                     await session.ws.close();
                     return await removeFile('./session/' + id);
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
@@ -85,4 +82,4 @@ router.get('/', async (req, res) => {
     return await getPaire();
 });
 
-module.exports = router;
+export default router;

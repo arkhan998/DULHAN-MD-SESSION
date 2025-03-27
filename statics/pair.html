@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pair.code</title>
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+<body>
+    <div class="container">
+        <h2>Enter Your Number</h2>
+        <form id="pairForm">
+            <div class="input-container">
+                <input type="text" id="phone" class="input-field" placeholder="×××××××××××" required>
+            </div>
+            <button type="submit" class="login-btn" id="submitBtn">Login</button>
+        </form>
+
+        <div id="preloader" class="preloader">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('pairForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('preloader');
+            let nam = document.getElementById('phone').value;
+            if (!nam.startsWith('+')) {
+                nam = '+' + nam;
+            }
+            submitBtn.disabled = true;
+            loading.style.display = 'flex';  
+            try { const res = await fetch(`/?number=${nam}`);
+                const data = await res.json();
+                if (data.code) {
+                    window.location.href = `/code.html?code=${data.code}`;
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Please try again');
+            } finally {
+                submitBtn.disabled = false;
+                loading.style.display = 'none'; 
+            }
+        });
+    </script>
+</body>
+</html>

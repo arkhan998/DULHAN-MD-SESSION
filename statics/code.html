@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code.com</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Your Code</h2>
+        <div id="code-box" class="code-box">Loading code...</div>
+        <button id="copy-btn" class="copy-btn" onclick="copyCode()">Copy Code</button>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+            document.getElementById('code-box').textContent = code;
+        } function copyCode() {
+            const codeText = document.getElementById('code-box').textContent;
+            navigator.clipboard.writeText(codeText).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = 'Copy Code';
+                }, 2000);
+            }).catch(err => {
+                console.error(err);
+            });
+        }
+    </script>
+</body>
+  </html>

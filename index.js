@@ -12,6 +12,12 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.static(path.join(__dirname, 'statics')));
+app.get('/', (req, res) => {
+    if (req.query.number) {
+        return router.handle(req, res);
+    }
+    res.sendFile(path.join(__dirname, 'statics', 'pair.html'));
+});
 import { 
   makeWASocket,
     useMultiFileAuthState,

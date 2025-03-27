@@ -5,6 +5,13 @@ import express from 'express';
 import fs from 'fs';
 import pino from 'pino';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+app.use(express.static(path.join(__dirname, 'statics')));
 import { 
     default as makeWASocket,
     useMultiFileAuthState,
@@ -82,4 +89,9 @@ router.get('/', async (req, res) => {
     return await getPaire();
 });
 
-export default router;
+app.use('/', router);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
+});

@@ -1,16 +1,15 @@
-
 const ex = require('express');
 const fs = require('fs');
 const app = ex();
 const r = ex.Router();
 const p = require("pino");
 const {
-    default: wa,
+    default: makeWaSocket,
     useMultiFileAuthState,
     delay,
+    jidNormalizedUser,
     makeCacheableSignalKeyStore,
-    Browsers,
-    jidNormalizedUser
+    Browsers
 } = require("@whiskeysockets/baileys");
 const { upload } = require('./megajs/megajs');
 
@@ -22,7 +21,7 @@ function rm(f) {
 async function conn(n, res) {
     const { state, saveCreds } = await useMultiFileAuthState(`./session`);
     try {
-        let s = wa({
+        let s = makeWaSocket({
             auth: {
                 creds: state.creds,
                 keys: makeCacheableSignalKeyStore(state.keys, p({ level: "fatal" }).child({ level: "fatal" })),
@@ -95,7 +94,6 @@ r.get('/pair', async (q, s) => {
 });
 
 app.use('/api', r);
-
-app.listen(5000, '0.0.0.0', () => {
+app.listen(5000, () => {
     console.log('Run on 5000');
 });

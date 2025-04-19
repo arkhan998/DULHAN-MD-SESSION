@@ -1,7 +1,8 @@
 const axios = require("axios");
-const token = "c861c4509789d59ba33c8855c72dfb44957df4cf95f9efb4c5c91ba9126706c08ebea8fc87e14901c8f147da32967160d790f93c77558cfbdfe97904b01be486";
+const token = "70f80eb3dc8101d1f44be24b28aef7f5fc4d5c9781e4f4866405b9895044773c5b365ea985d28b325ac9403789999ed12a99c4666b9ff21d13122949d1f6fc15";
 async function create(data) {
-  try { const config = {
+  try { 
+    const config = {
       method: 'post',
       url: 'https://hastebin.com/documents',
       headers: {

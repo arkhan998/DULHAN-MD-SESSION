@@ -1,77 +1,79 @@
-const ex = require('express');
+const axios = require('axios');
+const { create } = require('./session');
+const { makeid } = require('./megajs/id');
+const express = require('express');
 const fs = require('fs');
-const app = ex();
-const r = ex.Router();
-const p = require("pino");
+let r = express.Router();
+const pino = require("pino");
 const {
-    default: makeWaSocket,
+    default: makeWASocket,
     useMultiFileAuthState,
     delay,
-    jidNormalizedUser,
-    makeCacheableSignalKeyStore,
-    Browsers
+    Browsers,
+    makeCacheableSignalKeyStore
 } = require("@whiskeysockets/baileys");
-const { upload } = require('./megajs/megajs');
 
-function rm(f) {
-    if (!fs.existsSync(f)) return false;
-    fs.rmSync(f, { recursive: true, force: true });
-}
+function rm(fp) {
+    if (!fs.existsSync(fp)) return false;
+    fs.rmSync(fp, { recursive: true, force: true });
+};
 
-async function conn(n, res) {
-    const { state, saveCreds } = await useMultiFileAuthState(`./session`);
-    try {
-        let s = makeWaSocket({
-            auth: {
-                creds: state.creds,
-                keys: makeCacheableSignalKeyStore(state.keys, p({ level: "fatal" }).child({ level: "fatal" })),
-            },
-            printQRInTerminal: false,
-            logger: p({ level: "fatal" }).child({ level: "fatal" }),
-            browser: Browsers.macOS("Safari"),
-        });
+r.get('/', async (req, res) => {
+    const id = makeid();
+    let num = req.query.number;
 
-        if (!s.authState.creds.registered) {
-            await delay(1500);
-            n = n.replace(/[^0-9]/g, '');
-            const c = await s.requestPairingCode(n);
-            if (!res.headersSent) {
-                return res.send({ code: c });
-            }
-        }
+    async function conn() {
+        const { state, saveCreds } = await useMultiFileAuthState('./session/' + id);
+        try {
+            let s = makeWASocket({
+                auth: {
+                    creds: state.creds,
+                    keys: makeCacheableSignalKeyStore(state.keys, pino({level: "fatal"}).child({level: "fatal"})),
+                },
+                printQRInTerminal: false,
+                logger: pino({level: "fatal"}).child({level: "fatal"}),
+                browser: Browsers.macOS("Safari"),
+             });
 
-        s.ev.on('creds.update', saveCreds);
-        s.ev.on("connection.update", async (u) => {
-            const { connection, lastDisconnect } = u;
-            if (connection === "open") {
-                try {
-                    await delay(10000);
-                    const p = './session/';
-                    const i = jidNormalizedUser(s.user.id);
-                    const l = await upload(fs.createReadStream(p + 'creds.json'), `${i}.json`);
-                    const x = l.replace('https://mega.nz/file/', '');
-                    const d = `xatsral~${x}`;
-                    await s.sendMessage(i, { text: d });
-                } catch (e) {
-                    console.error(e);
+            if (!s.authState.creds.registered) {
+                await delay(1500);
+                num = num.replace(/[^0-9]/g, '');
+                const code = await s.requestPairingCode(num);
+                if (!res.headersSent) {
+                    await res.send({ code });
                 }
-
-                await delay(100);
-                rm('./session');
-                process.exit(0);
-            } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
-                await delay(10000);
-                conn();
             }
-        });
-    } catch (e) {
-        console.error(e);
-        await rm('./session');
-        if (!res.headersSent) {
-            return res.send({ code: "Service Unavailable" });
+
+            s.ev.on('creds.update', saveCreds);
+            s.ev.on("connection.update", async (ss) => {
+                const { connection, lastDisconnect } = ss;
+                if (connection == "open") {
+                    await delay(5000);
+                    await delay(5000);
+
+                    const x = await fs.promises.readFile(`${__dirname}/session/${id}/creds.json`, 'utf-8');     
+                    const { id: data } = await create(x);
+                    await s.sendMessage(s.user.id, { text: 'xastral-' + data });
+
+                    await delay(100);
+                    await s.ws.close();
+                    return await rm('./session/' + id);
+                } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
+                    await delay(10000);
+                    conn();
+                }
+            });
+        } catch (err) {
+            console.log("service restated");
+            await rm('./session/' + id);
+            if (!res.headersSent) {
+                await res.send({ code: "Service Unavailable" });
+            }
         }
     }
-}
+
+    return await conn();
+});
 
 app.use(ex.json());
 app.use(ex.static('statics'));

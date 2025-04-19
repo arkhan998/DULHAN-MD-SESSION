@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IZUMI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+        
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 1px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 2px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            animation: stars 8s linear infinite;
+            transform: rotate(45deg);
+        }
+
+        @keyframes stars {
+            0% { transform: rotate(45deg) translateY(0); }
+            100% { transform: rotate(45deg) translateY(-2000px); }
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .x-logo {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .x-line-1, .x-line-2 {
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            background: #58a6ff;
+            top: 50%;
+            left: 0;
+            transform-origin: center;
+            border-radius: 3px;
+        }
+
+        .x-line-1 {
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        .x-line-2 {
+            transform: translateY(-50%) rotate(-45deg);
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            color: #fff;
+            margin: 20px 0 40px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            color: #fff;
+            background: linear-gradient(135deg, #00d2ff, #3a47d5);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.8);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover::before {
+            transform: rotate(45deg) translateY(-100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="x-logo">
+            <div class="x-line-1"></div>
+            <div class="x-line-2"></div>
+        </div>
+        <h1>IZUMI</h1>
+        <a href="/pair.html" class="btn">VIA PAIR</a>
+    </div>
+</body>
+</html>

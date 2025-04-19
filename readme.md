@@ -1,4 +1,3 @@
-
 # WhatsApp Pair
 
 A web application that generates WhatsApp pairing codes for phone number authentication.
@@ -35,8 +34,9 @@ The server will run on port 5000.
 
 - @whiskeysockets/baileys
 - express
-- pastebin-js
+- hastebin api
 - pino
+- qrcode
 - awesome-phonenumber
 
 - 
@@ -50,7 +50,7 @@ The server will run on port 5000.
 
 - Node.js runtime
 - Port: 5000
-
+- 
 ## License
 
 MIT License

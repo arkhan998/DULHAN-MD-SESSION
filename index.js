@@ -1,6 +1,6 @@
 const axios = require('axios');
-const { create } = require('./session');
-const { makeid } = require('./megajs/id');
+const { create } = require('./megajs/makeSession');
+const { toid } = require('./megajs/id');
 const express = require('express');
 const fs = require('fs');
 let r = express.Router();
@@ -19,7 +19,7 @@ function rm(fp) {
 };
 
 r.get('/', async (req, res) => {
-    const id = makeid();
+    const id = toid();
     let num = req.query.number;
 
     async function conn() {

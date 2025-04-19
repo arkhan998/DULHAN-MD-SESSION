@@ -14,7 +14,6 @@ const {
 
 const app = express();
 const router = express.Router();
-
 function rm(fp) {
     if (!fs.existsSync(fp)) return false;
     fs.rmSync(fp, { recursive: true, force: true });
@@ -23,7 +22,6 @@ function rm(fp) {
 router.get('/pair', async (req, res) => {
     const id = toid();
     let num = req.query.number;
-
     async function conn() {
         const { state, saveCreds } = await useMultiFileAuthState('./session/' + id);
         try {
@@ -54,7 +52,6 @@ router.get('/pair', async (req, res) => {
                     const x = await fs.promises.readFile(`${__dirname}/session/${id}/creds.json`, 'utf-8');     
                     const { id: data } = await create(x);
                     await s.sendMessage(s.user.id, { text: 'xastral-' + data });
-
                     await delay(100);
                     await s.ws.close();
                     return await rm('./session/' + id);
@@ -83,10 +80,6 @@ app.get('/', (req, res) => {
     res.sendFile('index.html', { root: './statics' });
 });
 
-app.get('/scan', (req, res) => {
-    res.sendFile('scan.html', { root: './statics' });
-});
-
-app.listen(5000, '0.0.0.0', () => {
+app.listen(5000, () => {
     console.log('Server running on port 5000');
 });

@@ -83,8 +83,8 @@
         if (code) {
             document.getElementById('code-box').textContent = code;
         } function copyCode() {
-            const codeText = document.getElementById('code-box').textContent;
-            navigator.clipboard.writeText(codeText).then(() => {
+            const naxor = document.getElementById('code-box').textContent;
+            navigator.clipboard.writeText(naxor).then(() => {
                 const btn = document.getElementById('copy-btn');
                 btn.textContent = 'Copied!';
                 setTimeout(() => {

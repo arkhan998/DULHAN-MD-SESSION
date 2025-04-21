@@ -1,9 +1,9 @@
-const express = require('express');
-const path = require('path');
+var express = require('express');
+var path = require('path');
 const body = require("body-parser");
-const axios = require('axios');
-const { create } = require('./hastebin/makeSession');
-const { get } = require("./hastebin/makeSession"); 
+var axios = require('axios');
+var { create } = require('./hastebin/makeSession');
+var { get } = require("./hastebin/makeSession"); 
 
 function ToMyId(len = 4) {
     let res = '';
@@ -14,7 +14,7 @@ function ToMyId(len = 4) {
     return res;
 }
 
-const fs = require('fs');
+var fs = require('fs');
 const pino = require("pino");
 const {
     default: WASocket,
@@ -24,9 +24,9 @@ const {
     makeCacheableSignalKeyStore
 } = require("@whiskeysockets/baileys");
 
-const app = express();
-const root = process.cwd();
-const port = process.env.PORT || 8000;
+var app = express();
+var root = process.cwd();
+var port = process.env.PORT || 8000;
 
 app.use(body.json());
 app.use(body.urlencoded({ extended: true }));
@@ -53,7 +53,7 @@ app.get('/session', async (req, res) => {
         });
     }
 
-    const query = q.split(';')[1];
+    var query = q.split(';')[1];
     try { const data = await get(query);
         res.json({
             ok: true,
@@ -67,7 +67,7 @@ app.get('/session', async (req, res) => {
 });
 
 app.get('/pair', async (req, res) => {
-    const id = ToMyId();
+    var id = ToMyId();
     let num = req.query.number;
     async function pair() {
         const { state, saveCreds } = await useMultiFileAuthState('./session/' + id);
@@ -84,7 +84,7 @@ app.get('/pair', async (req, res) => {
             if (!wa.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
-                const code = await wa.requestPairingCode(num);
+                var code = await wa.requestPairingCode(num);
                 if (!res.headersSent) {
                     await res.json({ code });
                 }
@@ -96,7 +96,7 @@ app.get('/pair', async (req, res) => {
                 if (connection == "open") {
                     await delay(5000);
                     await delay(5000);
-                    const json = await fs.promises.readFile(`${root}/session/${id}/creds.json`, 'utf-8');     
+                    var json = await fs.promises.readFile(`${root}/session/${id}/creds.json`, 'utf-8');     
                     const { id: sessionId } = await create(json);
                     await wa.sendMessage(wa.user.id, { text: 'xastral~' + sessionId });
                     await delay(100);

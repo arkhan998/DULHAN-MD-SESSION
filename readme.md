@@ -45,7 +45,6 @@ The server will run on port 5000.
 - express
 - hastebin api
 - pino
-- qrcode
 - awesome-phonenumber
 
 - 
@@ -54,6 +53,7 @@ The server will run on port 5000.
 
 ## CC
 ```© Naxordeve```
+```© Diegoson```
 
 ## Environment
 

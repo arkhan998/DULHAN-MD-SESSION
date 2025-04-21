@@ -5,7 +5,7 @@ const axios = require('axios');
 const { create } = require('./megajs/makeSession');
 const { get } = require("./megajs/makeSession"); 
 
-function makeId(len = 4) {
+function ToMyId(len = 4) {
     let res = '';
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (let i = 0; i < len; i++) {
@@ -26,7 +26,7 @@ const {
 
 const app = express();
 const root = process.cwd();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8000;
 
 app.use(body.json());
 app.use(body.urlencoded({ extended: true }));
@@ -49,7 +49,7 @@ app.get('/session', async (req, res) => {
     const q = req.query.q;
     if (!q) { return res.status(400).json({
             ok: false,
-            msg: 'Query parameter "q" is required.'
+            msg: 'err missing q'
         });
     }
 
@@ -61,16 +61,13 @@ app.get('/session', async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({
-            ok: false,
-            msg: 'Internal server error.',
-            err: err.message
+        res.status(500).json({ok: false, msg: 'server errr', err: err.message
         });
     }
 });
 
 app.get('/pair', async (req, res) => {
-    const id = makeId();
+    const id = ToMyId();
     let num = req.query.number;
     async function pair() {
         const { state, saveCreds } = await useMultiFileAuthState('./session/' + id);
@@ -94,10 +91,8 @@ app.get('/pair', async (req, res) => {
             }
 
             wa.ev.on('creds.update', saveCreds);
-
             wa.ev.on("connection.update", async (state) => {
                 const { connection, lastDisconnect } = state;
-
                 if (connection == "open") {
                     await delay(5000);
                     await delay(5000);
@@ -116,7 +111,7 @@ app.get('/pair', async (req, res) => {
             console.error(err);
             await rmFile('./session/' + id);
             if (!res.headersSent) {
-                res.status(500).json({ error: "Service Unavailable" });
+                res.status(500).json({ error: "Service unavailable" });
             }
         }
     }

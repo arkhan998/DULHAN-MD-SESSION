@@ -1,8 +1,9 @@
 const axios = require('axios');
-const { create } = require('./megajs/makeSession');
+const { create } = require('./megajs/makeSeeion');
 const { toid } = require('./megajs/id');
 const express = require('express');
 const fs = require('fs');
+let router = express.Router();
 const pino = require("pino");
 const {
     default: makeWASocket,
@@ -12,20 +13,19 @@ const {
     makeCacheableSignalKeyStore
 } = require("@whiskeysockets/baileys");
 
-const app = express();
-const router = express.Router();
-function rm(fp) {
-    if (!fs.existsSync(fp)) return false;
-    fs.rmSync(fp, { recursive: true, force: true });
-}
+function removeFile(FilePath) {
+    if (!fs.existsSync(FilePath)) return false;
+    fs.rmSync(FilePath, { recursive: true, force: true });
+};
 
-router.get('/pair', async (req, res) => {
-    const id = toid();
+router.get('/', async (req, res) => {
+    const id = makeid();
     let num = req.query.number;
-    async function conn() {
+
+    async function getPaire() {
         const { state, saveCreds } = await useMultiFileAuthState('./session/' + id);
         try {
-            let s = makeWASocket({
+            let session = makeWASocket({
                 auth: {
                     creds: state.creds,
                     keys: makeCacheableSignalKeyStore(state.keys, pino({level: "fatal"}).child({level: "fatal"})),
@@ -33,53 +33,48 @@ router.get('/pair', async (req, res) => {
                 printQRInTerminal: false,
                 logger: pino({level: "fatal"}).child({level: "fatal"}),
                 browser: Browsers.macOS("Safari"),
-            });
+             });
 
-            if (!s.authState.creds.registered) {
+            if (!session.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
-                const code = await s.requestPairingCode(num);
+                const code = await session.requestPairingCode(num);
                 if (!res.headersSent) {
-                    return res.send({ code });
+                    await res.send({ code });
                 }
             }
 
-            s.ev.on('creds.update', saveCreds);
-            s.ev.on("connection.update", async (ss) => {
-                const { connection, lastDisconnect } = ss;
+            session.ev.on('creds.update', saveCreds);
+
+            session.ev.on("connection.update", async (s) => {
+                const { connection, lastDisconnect } = s;
+
                 if (connection == "open") {
                     await delay(5000);
-                    const x = await fs.promises.readFile(`${__dirname}/session/${id}/creds.json`, 'utf-8');     
-                    const { id: data } = await create(x);
-                    await s.sendMessage(s.user.id, { text: 'xastral-' + data });
+                    await delay(5000);
+
+                    const jsonData = await fs.promises.readFile(`${__dirname}/session/${id}/creds.json`, 'utf-8');     
+                    const { id: data } = await create(jsonData);
+                    await session.sendMessage(session.user.id, { text: 'xastral~' + data });
+
                     await delay(100);
-                    await s.ws.close();
-                    return await rm('./session/' + id);
+                    await session.ws.close();
+                    return await removeFile('./session/' + id);
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
                     await delay(10000);
-                    conn();
+                    getPaire();
                 }
             });
         } catch (err) {
-            console.log("service restarted", err);
-            await rm('./session/' + id);
+            console.log("service restated");
+            await removeFile('./session/' + id);
             if (!res.headersSent) {
-                return res.send({ code: "Service Unavailable" });
+                await res.send({ code: "Service Unavailable" });
             }
         }
     }
 
-    return await conn();
+    return await getPaire();
 });
 
-app.use(express.json());
-app.use(express.static('statics'));
-app.use('/', router);
-
-app.get('/', (req, res) => {
-    res.sendFile('index.html', { root: './statics' });
-});
-
-app.listen(5000, () => {
-    console.log('Server running on port 5000');
-});
+module.exports = router;

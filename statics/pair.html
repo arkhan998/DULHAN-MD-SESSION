@@ -1,4 +1,4 @@
-<!doctype html>
+ html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -114,7 +114,7 @@
         <h2>Enter Your Number</h2>
         <form id="pairForm">
             <div class="input-container">
-                <input type="text" id="phone" class="input-field" placeholder="×××××××××××" required>
+                <input type="tel" id="phone" class="input-field" pattern="[+][0-9]+" placeholder="+1234567890" required>
             </div>
             <button type="submit" class="login-btn" id="submitBtn">Login</button>
         </form>
@@ -129,9 +129,12 @@
             e.preventDefault();
             const submitBtn = document.getElementById('submitBtn');
             const loading = document.getElementById('preloader');
-            let nam = document.getElementById('phone').value;
-            if (!nam.startsWith('+')) {
-                nam = '+' + nam;
+            let nam = document.getElementById('phone').value.trim();
+            if (!nam.startsWith('+') || nam.length < 10) {
+                alert('Please enter a valid phone number with country code (e.g. +27)');
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+                return;
             }
             submitBtn.disabled = true;
             loading.style.display = 'flex';  

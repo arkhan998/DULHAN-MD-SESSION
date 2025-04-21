@@ -1,6 +1,14 @@
 # WhatsApp Pair
 
+**hastebin**
+
 A web application that generates WhatsApp pairing codes for phone number authentication.
+
+# Note
+```You can also change token in
+   hastebin/makeSession.js
+   if u want, get it on hastebin web
+```
 
 ## Features
 

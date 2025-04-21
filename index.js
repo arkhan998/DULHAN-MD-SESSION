@@ -2,8 +2,8 @@ const express = require('express');
 const path = require('path');
 const body = require("body-parser");
 const axios = require('axios');
-const { create } = require('./megajs/makeSession');
-const { get } = require("./megajs/makeSession"); 
+const { create } = require('./hastebin/makeSession');
+const { get } = require("./hastebin/makeSession"); 
 
 function ToMyId(len = 4) {
     let res = '';

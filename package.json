@@ -4,7 +4,9 @@
     "description": "ok",
     "main": "index.js",
     "scripts": {
-      "start": "node index.js "    
+      "start": "node index.js"   
+      "postinstall": "cd node_modules/@whiskeysockets/baileys && npm install && npm run build"
+
     },
   "dependencies": {
     "@whiskeysockets/baileys": "github:WhiskeySockets/Baileys",

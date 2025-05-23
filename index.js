@@ -22,7 +22,7 @@ const {
     delay,
     Browsers,
     makeCacheableSignalKeyStore
-} = require("baileys");
+} = require("@whiskeysockets/baileys");
 
 var app = express();
 var root = process.cwd();

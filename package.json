@@ -5,11 +5,9 @@
     "main": "index.js",
     "scripts": {
       "start": "node index.js"   
-      "postinstall": "cd node_modules/@whiskeysockets/baileys && npm install && npm run build"
-
     },
   "dependencies": {
-    "@whiskeysockets/baileys": "github:WhiskeySockets/Baileys",
+    "baileys": "^6.7.17",
     "awesome-phonenumber": "^2.64.0",
     "axios": "^1.8.4",
     "pino": "^8.1.0",

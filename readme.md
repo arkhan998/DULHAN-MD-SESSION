@@ -35,7 +35,7 @@ The server will run on port 5000.
 ## Usage
 
 1. Open the web interface
-2. Enter your phone number with country code (e.g., +1234567890)
+2. Enter your phone number with country code (e.g., +923310195292)
 3. Click "Login" to generate the pairing code
 4. Use the code to pair your WhatsApp account
 
@@ -49,7 +49,7 @@ The server will run on port 5000.
 
 - 
 ## BOT SCRIPT
-[BOT SCRIPT](https://github.com/naxordeve/whatsapp-bot)
+[BOT SCRIPT](https://github.com/arkhan998/DULHAN-MD)
 
 ## CC
 ```© Naxordeve```

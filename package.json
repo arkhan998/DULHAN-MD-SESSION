@@ -1,18 +1,19 @@
 {
-  "name": "dulhan-md-session-gen",
-  "version": "2.0.0",
-  "description": "A stylish web-based session ID generator for DULHAN-MD with QR and Pairing Code options.",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "author": "arkhan998",
-  "license": "ISC",
+    "name": "dulhan-md-session-gen",
+    "version": "1.0.0",
+    "description": "ok",
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js"   
+    },
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.7.2",
-    "express": "^4.19.2",
+    "baileys": "^6.7.17",
+    "awesome-phonenumber": "^2.64.0",
+    "axios": "^1.8.4",
     "pino": "^8.1.0",
-    "qrcode": "^1.5.3",
-    "socket.io": "^4.7.5"
-  }
+    "phone" : "3.1.30",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.1",
+    "path": "^0.12.7"
+   }
 }

@@ -98,7 +98,7 @@ app.get('/pair', async (req, res) => {
                     await delay(5000);
                     var json = await fs.promises.readFile(`${root}/session/${id}/creds.json`, 'utf-8');     
                     const { id: sessionId } = await create(json);
-                    await wa.sendMessage(wa.user.id, { text: 'xastral~' + sessionId });
+                    await wa.sendMessage(wa.user.id, { text: 'DULHAN-MD~' + sessionId });
                     await delay(100);
                     await wa.ws.close();
                     return await rmFile('./session/' + id);
